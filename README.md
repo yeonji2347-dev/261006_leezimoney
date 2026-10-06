@@ -116,9 +116,11 @@ features/challenge/     Shared data state, dashboard, community, explicit demo
 features/budget/        Initial budget setup/edit
 features/records/       Create/edit/delete/detail/history
 features/admin/         Operator metrics, participant search/details, challenge creation
+features/counsel/       Gemini BYOK counseling UI, request validation, server proxy
 lib/supabase/           Browser/server Supabase clients
 utils/challenge.ts      Pure Seoul date and budget/statistics functions
 proxy.ts                Supabase session cookie refresh
+app/api/counsel/        Authenticated, non-persistent Gemini API relay
 supabase/migrations/    PostgreSQL schema + RLS + private Storage policies
 supabase/tests/         Transactional PostgreSQL security assertions
 tests/                  Calculation and database tests
@@ -151,7 +153,7 @@ netlify.toml            Netlify deployment configuration
 
 ## 7. 구현 기능
 
-회원가입·이메일 인증·로그인·로그아웃, 닉네임 수정, 챌린지 참여, 다섯 가지 예산 설정, 홈 대시보드, DAY 1–14 달력, 인증 CRUD, 복수 카테고리, 선택 이미지 및 signed URL, 성공 화면, 기록 목록·카테고리 필터·상세, 리포트, 공개 참가 인증 현황, 꾸준함 배지, 관리자 서버 권한 검사·통계·검색·인증자/미인증자 필터·개인 기록 조회·새 기수 생성, 데모 체험, 모바일 하단 내비게이션, 반응형 UI, 입력/네트워크 오류 처리.
+Gemini AI 소비 상담·사용자 API 키 입력·선택적 예산 요약 공유, 회원가입·이메일 인증·로그인·로그아웃, 닉네임 수정, 챌린지 참여, 다섯 가지 예산 설정, 홈 대시보드, DAY 1–14 달력, 인증 CRUD, 복수 카테고리, 선택 이미지 및 signed URL, 성공 화면, 기록 목록·카테고리 필터·상세, 리포트, 공개 참가 인증 현황, 꾸준함 배지, 관리자 서버 권한 검사·통계·검색·인증자/미인증자 필터·개인 기록 조회·새 기수 생성, 데모 체험, 모바일 하단 내비게이션, 반응형 UI, 입력/네트워크 오류 처리.
 
 ## 8. 미구현 및 향후 개선
 
@@ -160,4 +162,39 @@ netlify.toml            Netlify deployment configuration
 - 실패한 Storage 삭제의 잔여 이미지 정리 작업. 업로드와 DB 연결은 서비스 간 완전한 트랜잭션이 아니므로 주기적 정리가 유용합니다.
 - 실시간 참가 현황 갱신은 없으며 페이지 이동/새로고침으로 확인합니다.
 - 비밀번호 재설정·이메일 변경·계정 삭제, 전 기수 데이터 내보내기, 추가 접근성 자동 검사.
-- 결제, 카카오 로그인, 푸시, AI 분석, 채팅, 소비액 랭킹, 금융기관 연동/카드 자동수집은 MVP에서 제외했습니다.
+- 결제, 카카오 로그인, 푸시, 자동 AI 소비 분석, 참가자 간 채팅, 소비액 랭킹, 금융기관 연동/카드 자동수집은 MVP에서 제외했습니다.
+
+## 9. Gemini AI 소비 상담원
+
+`/counsel`에서 본인의 **Gemini API 키**를 입력하고 예산·충동구매·꾸준한 소비 기록을 한국어로 상담합니다. PC 메뉴, 모바일 하단 **AI 상담**, MY 화면에서 접근할 수 있습니다.
+
+### 사용 방법
+
+1. [Google AI Studio](https://aistudio.google.com/apikey)에서 Gemini API 키를 발급합니다.
+2. AI 상담원 화면에서 키 입력 → **키 적용하기**. 이 단계는 키 입력 형식만 확인하며 첫 질문 때 실제 연결을 검증합니다.
+3. 질문을 입력하거나 예시 질문을 선택 → **질문 보내기**. 멀티턴 대화를 지원합니다.
+4. 필요한 경우 **이번 상담에 챌린지 요약 함께 보내기**를 체크합니다. 기본값은 해제이며 선택된 요청에만 챌린지 총 예산·누적 지출·남은 예산·하루 사용 가능액·인증 일수/경과일을 전달합니다. 수입·고정비·저축·이메일·닉네임·소비 메모·인증 이미지는 자동으로 전달하지 않습니다. 이전 답변이 공유한 숫자를 언급할 수 있으므로 새 대화는 **키와 대화 지우기**로 시작하세요.
+5. **응답 중단**, 키 교체, 키·대화 삭제를 지원합니다. 실패한 질문은 입력창에 유지해 직접 재전송할 수 있고 자동 재시도하지 않습니다.
+
+### 모델·연결·비용
+
+- 모델은 요청하신 **`gemini-3.5-flash-lite`**로 고정하며 다른 모델로 자동 변경하지 않습니다.
+- 공식 REST `POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent`를 사용합니다. 별도 Gemini SDK 의존성은 없습니다.
+- 클라이언트 → 같은 사이트의 `/api/counsel` → Google API. 브라우저에서 Google에 직접 호출하지 않습니다. 키는 서버에서 `x-goog-api-key` 헤더로 전달하며 URL에 넣지 않습니다.
+- **추가 배포 환경변수, 서버 공용 Gemini 키, DB 마이그레이션이 필요하지 않습니다.** 기존 Netlify Next.js 어댑터가 Node.js route handler를 실행합니다.
+- 사용량·요금·할당량은 각 사용자의 Google 프로젝트에 적용됩니다. Gemini API 사용 권한, 지역, API 키 제한과 결제/할당량을 본인의 Google 프로젝트에서 설정하세요.
+- 인증/권한/모델 접근/할당량/네트워크/30초 타임아웃/빈 답변·차단에 대한 한국어 안내가 있습니다. 모델 접근 실패 시 다른 모델로 대체하지 않습니다.
+
+### 키·대화와 데이터 보호
+
+- 키와 대화는 **현재 상담 화면의 React 메모리에만** 보관합니다. localStorage, sessionStorage, 쿠키, Supabase DB, 서버 환경변수에 저장하지 않습니다. 화면 이탈·새로고침·로그아웃 또는 삭제 시 초기화합니다. 키 교체도 대화를 초기화합니다.
+- 서버는 한 요청에서만 키를 사용하고 요청 본문·키·Google 원문 오류를 로그에 남기지 않습니다. 요청/응답 및 Google fetch는 `no-store`입니다. 배포에서 외부 로깅/APM을 추가하는 경우 요청 본문을 수집하지 않도록 설정하세요.
+- 상담 질문·최근 대화·선택적 예산 요약은 Google로 전달되므로 Google의 해당 계정/요금제 데이터 처리 조건이 적용됩니다. **이 사이트에 저장하지 않는다는 뜻이며 Google의 보관 정책까지 보장하지 않습니다.** 계좌번호·주민등록번호·비밀번호 등은 상담에 입력하지 마세요.
+- 서버에서 Supabase `getUser()`로 인증을 확인합니다. 명시적으로 `NEXT_PUBLIC_DEMO_MODE=true`인 환경만 BYOK 데모 호출을 로그인 없이 허용합니다. 운영 환경에서는 `false`로 유지하세요. same-origin 검사, 입력 제한, 80KB 본문 제한, 최근 최대 11개 메시지(완전한 대화 쌍 + 마지막 질문), 응답 시간 제한을 적용합니다.
+- 답변은 HTML로 삽입하지 않고 일반 텍스트로 렌더링합니다. 상담원에게는 계좌/거래/기록 수정 도구가 없습니다. 예산 및 습관 상담을 제공하며 투자 수익을 보장하지 않습니다.
+
+### 검증 범위
+
+`npm test`에 모델/헤더/대화 구조, 키 비노출, 요약 필드 허용 목록, 로그인·origin 제한, 잘못된 입력/큰 요청, 권한·할당량·모델 오류, 타임아웃·빈 답변·차단 테스트를 추가했습니다. Google 응답은 테스트에서 모의 응답으로 검증합니다. 실제 키로 Google 호출·요금·모델 권한은 사용자의 키 입력 후 확인해야 합니다.
+
+공식 참고: [Gemini 3.5 Flash-Lite](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite), [generateContent REST](https://ai.google.dev/api/generate-content), [API 키 관리](https://ai.google.dev/gemini-api/docs/api-key).

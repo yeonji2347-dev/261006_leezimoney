@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   ShieldCheck,
   ChevronDown,
+  MessageCircle,
 } from "lucide-react";
 import { useChallenge } from "@/features/challenge/provider";
 const nav = [
@@ -20,6 +21,12 @@ const nav = [
     label: "함께하는 챌린지",
     short: "챌린지",
     icon: Users,
+  },
+  {
+    href: "/counsel",
+    label: "AI 상담원",
+    short: "AI 상담",
+    icon: MessageCircle,
   },
   { href: "/my", label: "마이페이지", short: "MY", icon: UserRound },
 ];
@@ -108,7 +115,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </header>
         {s.demo && (
           <div className="demo-strip">
-            데모 체험 · 예시 데이터이며 변경사항은 이 브라우저에만 저장돼요.
+            {path === "/counsel"
+              ? "챌린지 기록은 예시이며, AI 상담은 입력한 키로 실제 Google API를 호출해요."
+              : "데모 체험 · 예시 데이터이며 변경사항은 이 브라우저에만 저장돼요."}
           </div>
         )}
         <main className={auth ? "main auth-main" : "main"}>{children}</main>

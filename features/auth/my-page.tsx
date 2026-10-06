@@ -13,6 +13,7 @@ import {
   TrendingUp,
   NotebookPen,
   UserRound,
+  MessageCircle,
 } from "lucide-react";
 export function MyPage() {
   const s = useChallenge();
@@ -96,6 +97,11 @@ export function MyPage() {
           <Link href="/setup" className="settings-link">
             <Wallet size={18} />
             나의 예산 설정
+            <ArrowUpRight size={18} />
+          </Link>
+          <Link href="/counsel" className="settings-link">
+            <MessageCircle size={18} />
+            AI 소비 상담 · 내 Gemini 키로 시작하기
             <ArrowUpRight size={18} />
           </Link>
           <div className="privacy-note">

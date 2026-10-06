@@ -2705,3 +2705,266 @@ td {
     order: 6;
   }
 }
+
+.counsel-layout {
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.counsel-settings {
+  padding: 23px;
+}
+.counsel-intro {
+  font-size: 11px;
+  color: #8b987d;
+  margin: 17px 0 20px;
+}
+.counsel-settings form .button {
+  margin-top: 12px;
+}
+.counsel-key-link {
+  display: block;
+  margin-top: 13px;
+  font-size: 10px;
+}
+.counsel-key-status {
+  background: #f4f7ed;
+  border-radius: 8px;
+  padding: 11px;
+  font-size: 11px;
+  color: #809869;
+  margin-top: 15px;
+}
+.counsel-settings .privacy-note {
+  align-items: flex-start;
+  margin: 22px 0;
+}
+.counsel-settings .privacy-note svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.counsel-summary {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+.counsel-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.counsel-checkbox input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  margin: 2px 0 0;
+  padding: 0;
+  accent-color: #849c65;
+  flex-shrink: 0;
+}
+.counsel-summary p {
+  font-size: 10px;
+  color: #8d9c7b;
+  margin: 12px 0;
+}
+.counsel-summary small {
+  font-size: 9px;
+  color: #a0ad90;
+  display: block;
+  line-height: 1.8;
+}
+.counsel-model {
+  font-size: 10px;
+  color: #9dab8e;
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.counsel-model code {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  color: #879870;
+}
+.counsel-chat {
+  padding: 24px;
+}
+.counsel-chat .card-heading {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 17px;
+}
+.counsel-chat .brand-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+.counsel-messages {
+  height: 410px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 18px 2px;
+}
+.counsel-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 22px 8px;
+}
+.counsel-sprout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #faf3d4;
+  color: #8b9e69;
+  margin-bottom: 19px;
+}
+.counsel-welcome h2 {
+  font-size: 20px;
+}
+.counsel-welcome p {
+  color: #9aa58b;
+  font-size: 11px;
+  margin-top: 12px;
+}
+.counsel-suggestions {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 25px;
+}
+.counsel-suggestions button {
+  background: #f6f8f0;
+  border: 1px solid #edf0e6;
+  text-align: left;
+  border-radius: 9px;
+  padding: 12px;
+  color: #8b9b76;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.chat-message {
+  margin: 0 0 18px;
+  max-width: 92%;
+}
+.chat-message.user {
+  margin-left: auto;
+}
+.chat-message small {
+  display: block;
+  font-size: 9px;
+  color: #a1ad91;
+  margin-bottom: 7px;
+}
+.chat-message.user small {
+  text-align: right;
+}
+.chat-message p {
+  background: #f5f8ef;
+  padding: 14px 17px;
+  border-radius: 12px;
+  color: #718760;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.9;
+}
+.chat-message.user p {
+  background: #fff5cd;
+  color: #8c8054;
+}
+.counsel-thinking {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.counsel-compose {
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+}
+.counsel-compose textarea {
+  margin: 0;
+  font-size: 12px;
+}
+.counsel-compose-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+.counsel-compose-actions small {
+  color: #a8b299;
+  font-size: 9px;
+}
+.counsel-footer {
+  font-size: 9px;
+  color: #a5b091;
+  margin-top: 15px;
+  line-height: 1.7;
+}
+@media (max-width: 1190px) {
+  .counsel-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 18px;
+  }
+  .counsel-chat {
+    padding: 20px;
+  }
+}
+@media (max-width: 960px) {
+  .counsel-layout {
+    grid-template-columns: 1fr;
+  }
+  .counsel-settings {
+    padding: 23px;
+  }
+  .counsel-messages {
+    height: 410px;
+  }
+}
+@media (max-width: 700px) {
+  .counsel-layout {
+    gap: 18px;
+  }
+  .counsel-chat {
+    padding: 20px 17px;
+  }
+  .counsel-chat .card-heading .muted {
+    font-size: 8px;
+  }
+  .counsel-messages {
+    height: 400px;
+  }
+  .counsel-welcome h2 {
+    font-size: 18px;
+  }
+  .counsel-welcome p {
+    font-size: 10px;
+  }
+  .counsel-compose-actions {
+    align-items: flex-start;
+  }
+  .counsel-compose-actions small {
+    font-size: 8px;
+    max-width: 150px;
+    line-height: 1.8;
+  }
+  .counsel-compose-actions .button {
+    padding: 11px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .bottom-nav a {
+    min-width: 50px;
+  }
+}
