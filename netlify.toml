@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Netlify automatically installs its Next.js adapter for SSR and route handlers.
+# Set Supabase environment variables in Netlify, not in this file.
